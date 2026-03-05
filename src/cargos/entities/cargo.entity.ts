@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Empleado } from 'src/empleados/entities/empleado.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
 
 
 @Entity()
-export class Position {
+export class Cargo {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -13,5 +14,6 @@ export class Position {
   @Column('decimal', { precision: 10, scale: 2 })
   baseSalary: number;
 
- 
+   @OneToMany(() => Empleado, empleado => empleado.cargo)
+  employees: Empleado[];
 }

@@ -1,3 +1,4 @@
+import { Cargo } from 'src/cargos/entities/cargo.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -9,7 +10,7 @@ import {
 
 
 @Entity()
-export class Employee {
+export class Empleado {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,4 +24,6 @@ export class Employee {
   @Column({ unique: true })
   email: string;
 
+    @ManyToOne(() => Cargo, cargo => cargo.employees)
+  cargo: Cargo;
 }

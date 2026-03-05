@@ -1,17 +1,16 @@
 import { Cargo } from 'src/cargos/entities/cargo.entity';
+import { Departamento } from 'src/departamentos/entities/departamento.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
   OneToOne,
-  JoinColumn
+  JoinColumn,
 } from 'typeorm';
-
 
 @Entity()
 export class Empleado {
-
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -26,4 +25,7 @@ export class Empleado {
 
     @ManyToOne(() => Cargo, cargo => cargo.empleados)
   cargo: Cargo;
+
+  @ManyToOne(() => Departamento, (departamento) => departamento.empleado)
+  departamento: Departamento;
 }

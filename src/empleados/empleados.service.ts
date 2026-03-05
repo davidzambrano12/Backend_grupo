@@ -15,7 +15,12 @@ export class EmpleadosService {
 
  
   async create(createEmpleadoDto: CreateEmpleadoDto) {
-    const empleado = this.empleadoRepo.create(createEmpleadoDto);
+    const { cargoId, departamentoId, ...rest } = createEmpleadoDto;
+    const empleado = this.empleadoRepo.create({
+      ...rest,
+      cargo: { id: cargoId },
+      departamento: { id: departamentoId },
+    });
     return await this.empleadoRepo.save(empleado);
   }
 
@@ -43,8 +48,12 @@ export class EmpleadosService {
  
   async update(id: number, updateEmpleadoDto: UpdateEmpleadoDto) {
     const empleado = await this.findOne(id);
+    const { cargoId, departamentoId, ...rest } = updateEmpleadoDto;
 
-    Object.assign(empleado, updateEmpleadoDto);
+    Object.assign(empleado, rest);
+    if (cargoId) empleado.cargo = { id: cargoId } as any;
+    if (departamentoId) empleado.departamento = { id: departamentoId } as any;
+
     return await this.empleadoRepo.save(empleado);
   }
 

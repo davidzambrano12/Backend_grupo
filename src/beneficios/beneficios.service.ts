@@ -13,7 +13,11 @@ export class BeneficiosService {
   ) {}
 
   async create(createBeneficioDto: CreateBeneficioDto) {
-    const beneficio = this.beneficioRepo.create(createBeneficioDto);
+    const { contratoId, ...rest } = createBeneficioDto;
+    const beneficio = this.beneficioRepo.create({
+      ...rest,
+      contrato: { id: contratoId },
+    });
     return await this.beneficioRepo.save(beneficio);
   }
 
@@ -34,7 +38,9 @@ export class BeneficiosService {
 
   async update(id: number, updateBeneficioDto: UpdateBeneficioDto) {
     const beneficio = await this.findOne(id);
-    Object.assign(beneficio, updateBeneficioDto);
+    const { contratoId, ...rest } = updateBeneficioDto;
+    Object.assign(beneficio, rest);
+    if (contratoId) beneficio.contrato = { id: contratoId } as any;
     return await this.beneficioRepo.save(beneficio);
   }
 

@@ -2,15 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Empleado } from './entities/empleado.entity';
+import { Employee } from './entities/empleado.entity';
 import { CreateEmpleadoDto } from './dto/create-empleado.dto';
 import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
 
 @Injectable()
 export class EmpleadosService {
   constructor(
-    @InjectRepository(Empleado)
-    private readonly empleadoRepo: Repository<Empleado>,
+    @InjectRepository(Employee)
+    private readonly empleadoRepo: Repository<Employee>,
   ) {}
 
  
@@ -53,6 +53,9 @@ export class EmpleadosService {
     const empleado = await this.findOne(id);
     return await this.empleadoRepo.remove(empleado);
   }
+
+
+  
 
  
 }

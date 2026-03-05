@@ -1,1 +1,4 @@
-export class CreateContratoDto {}
+export class CreateContratoDto {
+  startDate: string;
+  contractType: string;
+}

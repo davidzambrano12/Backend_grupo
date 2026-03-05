@@ -1,1 +1,3 @@
-export class CreateDepartamentoDto {}
+export class CreateDepartamentoDto {
+  name: string;
+}

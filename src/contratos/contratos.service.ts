@@ -1,26 +1,45 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Contrato } from './entities/contrato.entity';
 import { CreateContratoDto } from './dto/create-contrato.dto';
 import { UpdateContratoDto } from './dto/update-contrato.dto';
 
 @Injectable()
 export class ContratosService {
-  create(createContratoDto: CreateContratoDto) {
-    return 'This action adds a new contrato';
+  constructor(
+    @InjectRepository(Contrato)
+    private readonly contratoRepo: Repository<Contrato>,
+  ) {}
+
+  async create(createContratoDto: CreateContratoDto) {
+    const contrato = this.contratoRepo.create(createContratoDto);
+    return await this.contratoRepo.save(contrato);
   }
 
-  findAll() {
-    return `This action returns all contratos`;
+  async findAll() {
+    return await this.contratoRepo.find({ relations: ['empleado', 'beneficios'] });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} contrato`;
+  async findOne(id: number) {
+    const contrato = await this.contratoRepo.findOne({
+      where: { id },
+      relations: ['empleado', 'beneficios'],
+    });
+    if (!contrato) {
+      throw new NotFoundException('Contrato no encontrado');
+    }
+    return contrato;
   }
 
-  update(id: number, updateContratoDto: UpdateContratoDto) {
-    return `This action updates a #${id} contrato`;
+  async update(id: number, updateContratoDto: UpdateContratoDto) {
+    const contrato = await this.findOne(id);
+    Object.assign(contrato, updateContratoDto);
+    return await this.contratoRepo.save(contrato);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} contrato`;
+  async remove(id: number) {
+    const contrato = await this.findOne(id);
+    return await this.contratoRepo.remove(contrato);
   }
 }

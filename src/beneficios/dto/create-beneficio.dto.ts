@@ -1,1 +1,5 @@
-export class CreateBeneficioDto {}
+export class CreateBeneficioDto {
+  name: string;
+  amount: number;
+  contratoId: number;
+}

@@ -15,5 +15,5 @@ export class Cargo {
   baseSalary: number;
 
    @OneToMany(() => Empleado, empleado => empleado.cargo)
-  employees: Empleado[];
+  empleados: Empleado[];
 }

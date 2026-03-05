@@ -24,6 +24,6 @@ export class Empleado {
   @Column({ unique: true })
   email: string;
 
-    @ManyToOne(() => Cargo, cargo => cargo.employees)
+    @ManyToOne(() => Cargo, cargo => cargo.empleados)
   cargo: Cargo;
 }

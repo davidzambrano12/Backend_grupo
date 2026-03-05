@@ -1,26 +1,45 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Beneficio } from './entities/beneficio.entity';
 import { CreateBeneficioDto } from './dto/create-beneficio.dto';
 import { UpdateBeneficioDto } from './dto/update-beneficio.dto';
 
 @Injectable()
 export class BeneficiosService {
-  create(createBeneficioDto: CreateBeneficioDto) {
-    return 'This action adds a new beneficio';
+  constructor(
+    @InjectRepository(Beneficio)
+    private readonly beneficioRepo: Repository<Beneficio>,
+  ) {}
+
+  async create(createBeneficioDto: CreateBeneficioDto) {
+    const beneficio = this.beneficioRepo.create(createBeneficioDto);
+    return await this.beneficioRepo.save(beneficio);
   }
 
-  findAll() {
-    return `This action returns all beneficios`;
+  async findAll() {
+    return await this.beneficioRepo.find({ relations: ['contrato'] });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} beneficio`;
+  async findOne(id: number) {
+    const beneficio = await this.beneficioRepo.findOne({
+      where: { id },
+      relations: ['contrato'],
+    });
+    if (!beneficio) {
+      throw new NotFoundException('Beneficio no encontrado');
+    }
+    return beneficio;
   }
 
-  update(id: number, updateBeneficioDto: UpdateBeneficioDto) {
-    return `This action updates a #${id} beneficio`;
+  async update(id: number, updateBeneficioDto: UpdateBeneficioDto) {
+    const beneficio = await this.findOne(id);
+    Object.assign(beneficio, updateBeneficioDto);
+    return await this.beneficioRepo.save(beneficio);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} beneficio`;
+  async remove(id: number) {
+    const beneficio = await this.findOne(id);
+    return await this.beneficioRepo.remove(beneficio);
   }
 }

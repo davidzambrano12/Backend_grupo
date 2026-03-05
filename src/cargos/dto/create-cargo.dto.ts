@@ -1,1 +1,4 @@
-export class CreateCargoDto {}
+export class CreateCargoDto {
+  title: string;
+  baseSalary: number;
+}

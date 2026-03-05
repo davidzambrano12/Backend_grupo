@@ -1,17 +1,16 @@
 import { Cargo } from 'src/cargos/entities/cargo.entity';
+import { Departamento } from 'src/departamentos/entities/departamento.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
   OneToOne,
-  JoinColumn
+  JoinColumn,
 } from 'typeorm';
-
 
 @Entity()
 export class Empleado {
-
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -24,6 +23,9 @@ export class Empleado {
   @Column({ unique: true })
   email: string;
 
-    @ManyToOne(() => Cargo, cargo => cargo.employees)
+  @ManyToOne(() => Cargo, (cargo) => cargo.employees)
   cargo: Cargo;
+
+  @ManyToOne(() => Departamento, (departamento) => departamento.empleado)
+  departamento: Departamento;
 }

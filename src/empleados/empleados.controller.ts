@@ -31,4 +31,11 @@ export class EmpleadosController {
   remove(@Param('id') id: string) {
     return this.empleadosService.remove(+id);
   }
+
+  @Get(':id/detalle')
+  getDetalleCompleto(@Param('id') id: string) {
+    return this.empleadosService.getDetalleCompleto(+id);
+  }
+
+  
 }

@@ -28,7 +28,7 @@ export class EmpleadosService {
  
   async findAll() {
     return await this.empleadoRepo.find({
-      relations: ['departamento', 'cargo'],
+      relations: ['departamento', 'cargo', 'contrato'],
     });
   }
 
@@ -49,11 +49,12 @@ export class EmpleadosService {
  
   async update(id: number, updateEmpleadoDto: UpdateEmpleadoDto) {
     const empleado = await this.findOne(id);
-    const { cargoId, departamentoId, ...rest } = updateEmpleadoDto;
+    const { cargoId, departamentoId, contratoId, ...rest } = updateEmpleadoDto;
 
     Object.assign(empleado, rest);
     if (cargoId) empleado.cargo = { id: cargoId } as any;
     if (departamentoId) empleado.departamento = { id: departamentoId } as any;
+    if (contratoId) empleado.contrato = { id: contratoId } as any;
 
     return await this.empleadoRepo.save(empleado);
   }
@@ -64,8 +65,38 @@ export class EmpleadosService {
     return await this.empleadoRepo.remove(empleado);
   }
 
+  calcularSalarioNeto(empleado: Empleado): number {
+    const salarioBase = Number(empleado.cargo?.baseSalary) || 0;
+    const totalBeneficios = (empleado.contrato?.beneficios ?? []).reduce(
+      (sum, b) => sum + Number(b.amount),
+      0,
+    );
+    return salarioBase + totalBeneficios;
+  }
 
-  
+  async getDetalleCompleto(id: number) {
+    const empleado = await this.findOne(id);
+    const salarioNeto = this.calcularSalarioNeto(empleado);
 
- 
+    return {
+      id: empleado.id,
+      firstName: empleado.firstName,
+      lastName: empleado.lastName,
+      email: empleado.email,
+      departamento: empleado.departamento,
+      cargo: empleado.cargo,
+      contrato: {
+        id: empleado.contrato?.id,
+        startDate: empleado.contrato?.startDate,
+        contractType: empleado.contrato?.contractType,
+        beneficios: empleado.contrato?.beneficios ?? [],
+      },
+      salarioBase: Number(empleado.cargo?.baseSalary) || 0,
+      totalBeneficios: (empleado.contrato?.beneficios ?? []).reduce(
+        (sum, b) => sum + Number(b.amount),
+        0,
+      ),
+      salarioNeto,
+    };
+  }
 }

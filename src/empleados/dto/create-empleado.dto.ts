@@ -4,4 +4,5 @@ export class CreateEmpleadoDto {
   email: string;
   cargoId: number;
   departamentoId: number;
+  contratoId: number;
 }

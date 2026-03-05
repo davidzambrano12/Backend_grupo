@@ -15,11 +15,12 @@ export class EmpleadosService {
 
  
   async create(createEmpleadoDto: CreateEmpleadoDto) {
-    const { cargoId, departamentoId, ...rest } = createEmpleadoDto;
+    const { cargoId, departamentoId, contratoId, ...rest } = createEmpleadoDto;
     const empleado = this.empleadoRepo.create({
       ...rest,
       cargo: { id: cargoId },
       departamento: { id: departamentoId },
+      contrato: { id: contratoId },   
     });
     return await this.empleadoRepo.save(empleado);
   }

@@ -8,7 +8,7 @@ import {
 import { Contrato } from '../../contratos/entities/contrato.entity';
 
 @Entity()
-export class Benefit {
+export class Beneficio {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -19,6 +19,6 @@ export class Benefit {
   @Column('decimal', { precision: 10, scale: 2 })
   amount: number;
 
-  @ManyToOne(() => Contrato, contrato => contrato.benefits)
+  @ManyToOne(() => Contrato, contrato => contrato.beneficios)
   contrato: Contrato;
 }

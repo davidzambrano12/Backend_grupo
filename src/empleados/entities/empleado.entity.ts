@@ -6,8 +6,6 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  OneToOne,
-  JoinColumn,
 } from 'typeorm';
 
 @Entity()
@@ -25,13 +23,12 @@ export class Empleado {
   email: string;
 
     @ManyToOne(() => Cargo, cargo => cargo.empleados)
-  cargo: Cargo;
+  cargo?: Cargo;
 
 
   @ManyToOne(() => Departamento, (departamento) => departamento.empleado)
-  departamento: Departamento;
+  departamento?: Departamento;
 
-  @OneToOne(() => Contrato, (contrato) => contrato.empleado, { cascade: true })
-  @JoinColumn()
-  contrato: Contrato;
+  @ManyToOne(() => Contrato, (contrato) => contrato.empleados, { cascade: true })
+  contrato?: Contrato;
 }

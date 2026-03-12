@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { EmpleadosService } from './empleados.service';
 import { CreateEmpleadoDto } from './dto/create-empleado.dto';
 import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
@@ -9,6 +9,8 @@ export class EmpleadosController {
 
   @Post()
   create(@Body() createEmpleadoDto: CreateEmpleadoDto) {
+    console.log(createEmpleadoDto);
+    
     return this.empleadosService.create(createEmpleadoDto);
   }
 
@@ -17,9 +19,19 @@ export class EmpleadosController {
     return this.empleadosService.findAll();
   }
 
+  @Get('search')
+  searchByName(@Query('name') name: string) {
+    return this.empleadosService.searchByName(name);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.empleadosService.findOne(+id);
+  }
+
+  @Get(':id/detalle')
+  getDetalleCompleto(@Param('id') id: string) {
+    return this.empleadosService.getDetalleCompleto(+id);
   }
 
   @Patch(':id')
@@ -32,10 +44,4 @@ export class EmpleadosController {
     return this.empleadosService.remove(+id);
   }
 
-  @Get(':id/detalle')
-  getDetalleCompleto(@Param('id') id: string) {
-    return this.empleadosService.getDetalleCompleto(+id);
-  }
-
-  
 }

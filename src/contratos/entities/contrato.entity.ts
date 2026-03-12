@@ -2,7 +2,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  OneToOne,
   OneToMany
 } from 'typeorm';
 import { Empleado } from '../../empleados/entities/empleado.entity';
@@ -20,8 +19,8 @@ export class Contrato {
   @Column()
   contractType: string;
 
-  @OneToOne(() => Empleado, (empleado)  => empleado.contrato)
-  empleado: Empleado;
+  @OneToMany(() => Empleado, (empleado) => empleado.contrato)
+  empleados: Empleado[];
 
   @OneToMany(() => Beneficio, (beneficio) => beneficio.contrato, { cascade: true })
 beneficios: Beneficio[];

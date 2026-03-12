@@ -15,6 +15,8 @@ export class EmpleadosService {
 
  
   async create(createEmpleadoDto: CreateEmpleadoDto) {
+    console.log(createEmpleadoDto);
+    
     const { cargoId, departamentoId, contratoId, ...rest } = createEmpleadoDto;
     const empleado = this.empleadoRepo.create({
       ...rest,
@@ -25,6 +27,11 @@ export class EmpleadosService {
     return await this.empleadoRepo.save(empleado);
   }
 
+  async searchByName(name: string) {
+    return await this.empleadoRepo.find({
+      where: { firstName: name },
+    });
+  }
  
   async findAll() {
     return await this.empleadoRepo.find({
